@@ -1,0 +1,32 @@
+// export const DEFAULT_POSITION = { latitude: 53.902496, longitude: 27.561481 }; // Mensk
+export const DEFAULT_POSITION = { latitude: 53.90, longitude: 27.56 }; // Mensk
+
+export const FISH_LIST = [
+  { id: 1, title: 'Амур' },
+  { id: 2, title: 'Белоглазка' },
+  { id: 3, title: 'Голавль' },
+  { id: 4, title: 'Густера' },
+  { id: 5, title: 'Елец' },
+  { id: 6, title: 'Жерех' },
+  { id: 7, title: 'Краснопёрка' },
+  { id: 8, title: 'Карась' },
+  { id: 9, title: 'Карп' },
+  { id: 10, title: 'Линь' },
+  { id: 11, title: 'Лещ' },
+  { id: 12, title: 'Налим' },
+  { id: 13, title: 'Окунь' },
+  { id: 14, title: 'Осетр' },
+  { id: 15, title: 'Плотва' },
+  { id: 16, title: 'Подуст' },
+  { id: 17, title: 'Сом' },
+  { id: 18, title: 'Стерлядь' },
+  { id: 19, title: 'Синец' },
+  { id: 20, title: 'Судак' },
+  { id: 21, title: 'Толстолобик' },
+  { id: 22, title: 'Усач' },
+  { id: 23, title: 'Форель' },
+  { id: 24, title: 'Хариус' },
+  { id: 25, title: 'Чехонь' },
+  { id: 26, title: 'Щука' },
+  { id: 27, title: 'Язь' },
+];

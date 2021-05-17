@@ -1,0 +1,2 @@
+export const GOOGLE_MAP_API_KEY = 'AIzaSyASiPutfkCVSFHJ799RiHjYkOVTS2T5YUE';
+export const WEATHER_API_KEY = '120219e3f5fbe62f15845e92bfbbee0b';
