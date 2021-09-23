@@ -3,11 +3,7 @@ import { Form, Radio, DatePicker, Input, TimePicker, Button, Select, Space, Uplo
 import { ExportOutlined, UploadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { RangeValue } from 'rc-picker/lib/interface'
-
-import { Coordinates } from 'types/map';
-import { HourlyWeather } from 'types/weather';
-
+import { FlogData } from 'types/flog';
 import { DEFAULT_POSITION, FISH_LIST } from 'constants/application';
 import { Map } from 'components/Map';
 import { WeatherChart } from 'components/WeatherChart';
@@ -15,18 +11,7 @@ import getWeather from 'services/weather';
 import { usePosition } from 'hooks/usePosition';
 import './index.css';
 
-interface Data {
-  'fishing_type': 'feeder' | 'spinning'| 'rode';
-  'position': Coordinates;
-  'date': moment.Moment | null;
-  'time': RangeValue<moment.Moment>;
-  'weather': HourlyWeather[];
-  'water_temp': number | undefined;
-  'bycatch': string[];
-  'bigfish_weight': number;
-  'total_weight': number;
-  'notes': string;
-}
+
 
 const AddFlog = () => {
   // const [center, setCenter] = useState(DEFAULT_POSITION);
@@ -34,7 +19,7 @@ const AddFlog = () => {
   // const [time, setTime] = useState<RangeValue<moment.Moment>>([moment(new Date()).subtract(3 * 60 * 60 * 1000), moment(new Date())]);
   // const [weather, setWeather] = useState<HourlyWeather[]>([]);
 
-  const [data, setData] = useState<Data>({
+  const [data, setData] = useState<FlogData>({
     'fishing_type': 'feeder',
     'position': DEFAULT_POSITION,
     'date': moment(new Date()),
