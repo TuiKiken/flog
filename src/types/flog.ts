@@ -9,10 +9,10 @@ export interface FlogData {
   'position': Coordinates;
   'date': moment.Moment | null;
   'time': RangeValue<moment.Moment>;
-  'weather': HourlyWeather[];
+  'weather': HourlyWeather[] | undefined;
   'water_temp': number | undefined;
   'bycatch': string[];
-  'bigfish_weight': number;
-  'total_weight': number;
+  'bigfish_weight': number | undefined;
+  'total_weight': number | undefined;
   'notes': string;
 }
