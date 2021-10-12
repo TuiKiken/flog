@@ -6,15 +6,15 @@ export const usePosition = () => {
 
   useEffect(() => {
     if(!navigator.geolocation) {
-      message.error('Геолокация не поддерживается браузером');
+      message.error('Геолокация не поддерживается браузером', 60);
       return;
     }
 
     navigator.permissions
-      .query({name:'geolocation'})
+      .query({ name:'geolocation' })
       .then(result => {
         if (result.state === 'denied') {
-          message.error('Нет прав на получение геолокации');
+          message.error('Нет прав на получение геолокации', 60);
         }
       });
 
@@ -23,7 +23,7 @@ export const usePosition = () => {
       .getCurrentPosition(({ coords }) => {
         setPosition(coords);
       }, (error) => {
-        console.error(error);
+        message.error(error.message, 20);
       });
   }, []);
 

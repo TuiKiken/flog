@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom';
 import { Layout, Menu, Typography } from 'antd';
 import { EditOutlined, GlobalOutlined, AreaChartOutlined, HeartOutlined } from '@ant-design/icons';
@@ -34,6 +35,7 @@ const App: FC = () => {
             <Route path="/analytics">
               Analytics page
             </Route>
+            <Redirect from="/" to="/add" />
           </Switch>
         </Layout.Content>
         <Layout.Footer style={{ textAlign: 'center' }}>
