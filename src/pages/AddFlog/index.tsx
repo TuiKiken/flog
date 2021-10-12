@@ -8,14 +8,17 @@ import { DEFAULT_POSITION, FISH_LIST } from 'constants/application';
 import { Map } from 'components/Map';
 import { WeatherChart } from 'components/WeatherChart';
 import getWeather from 'services/weather';
+import { addFlog } from 'services/flog';
 import { usePosition } from 'hooks/usePosition';
 import './index.css';
 
+const divisible = 10 * 60 * 1000; // ten minutes
+const initialDate = moment(Math.floor(Date.now() / divisible) * divisible);
 const initialData: FlogData = {
   'fishing_type': 'feeder',
   'position': DEFAULT_POSITION,
-  'date': moment(new Date()),
-  'time': [moment(new Date()).subtract(3 * 60 * 60 * 1000), moment(new Date())],
+  'date': moment(initialDate),
+  'time': [moment(initialDate).subtract(3 * 60 * 60 * 1000), moment(initialDate)],
   'weather': undefined,
   'water_temp': undefined,
   'bycatch': [],
@@ -47,7 +50,7 @@ const AddFlog = () => {
     const position = form.getFieldValue('position');
 
     if (date === null) {
-      message.error(`Необходимо указать дату.`);
+      message.error('Необходимо указать дату');
       return;
     }
 
@@ -55,8 +58,9 @@ const AddFlog = () => {
     form.setFieldsValue({ weather });
   };
 
-  const handleFormSubmit = () => {
-    console.warn(form.getFieldsValue());
+  const handleFormSubmit = async () => {
+    await addFlog(form.getFieldsValue());
+    message.success('Отчёт о рыбалке добавлен');
   };
 
   return (
@@ -70,7 +74,7 @@ const AddFlog = () => {
     >
       <Form.Item label="Вид рыбалки" name="fishing_type">
         <Radio.Group>
-          <Radio.Button value="feeder">Фидел</Radio.Button>
+          <Radio.Button value="feeder">Фидер</Radio.Button>
           <Radio.Button value="spinning">Спиннинг</Radio.Button>
           <Radio.Button value="rod">Удочка</Radio.Button>
         </Radio.Group>

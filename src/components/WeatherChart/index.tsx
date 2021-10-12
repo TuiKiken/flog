@@ -20,10 +20,10 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather, time }) => 
     return acc;
   }, []);
 
-  const fromTime = time?.[0]?.startOf('hour').unix();
+  const fromTime = time?.[0]?.clone().startOf('hour').unix();
   const toTime = weather.find(i => i.date === time?.[1]?.clone().add(1, 'hours').startOf('hour').unix())
     ? time?.[1]?.clone().add(1, 'hours').startOf('hour').unix()
-    : time?.[1]?.startOf('hour').unix();
+    : time?.[1]?.clone().startOf('hour').unix();
 
   return (
     <ResponsiveContainer height={200}>
