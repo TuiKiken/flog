@@ -31,7 +31,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "firebase login && npm run build && firebase deploy"
+    "deploy": "firebase login && npm run build && firebase deploy",
+    "emulate": "firebase emulators:start"
   },
   "eslintConfig": {
     "extends": "react-app"
