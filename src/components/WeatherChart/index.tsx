@@ -5,7 +5,6 @@ import { ReferenceLine, ReferenceArea, Legend, Line, LineChart, ResponsiveContai
 
 import { HourlyWeather } from 'types/weather';
 
-
 export interface WeatherChartProps {
   weather: HourlyWeather[];
   time: RangeValue<moment.Moment>;
@@ -52,7 +51,7 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather, time }) => 
             isFront={true} />
         )}
 
-        <Tooltip labelFormatter={(value) => moment(value * 1000).format('D MMM YYYY(dddd) HH:mm')} />
+        <Tooltip labelFormatter={(value) => moment(Number(value) * 1000).format('D MMM YYYY(dddd) HH:mm')} />
         <Legend />
       </LineChart>
     </ResponsiveContainer>
