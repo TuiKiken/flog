@@ -30,13 +30,15 @@
     "@types/react-router-dom": "^5.3.2",
     "@types/recharts": "^1.8.23",
     "firebase-tools": "^9.21.0",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "source-map-explorer": "^2.5.2"
   },
   "scripts": {
     "start": "HTTPS=true SSL_CRT_FILE=./.cert/localhost.pem SSL_KEY_FILE=./.cert/localhost-key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "deploy": "firebase login && npm run build && firebase deploy",
     "emulate": "firebase emulators:start"
   },

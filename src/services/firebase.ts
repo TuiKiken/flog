@@ -6,6 +6,3 @@ import { firebaseConfig } from 'configs/firebase';
 export const firebaseApp = initializeApp(firebaseConfig);
 
 export const firebaseFirestore = getFirestore();
-
-// const { connectFirestoreEmulator } = require('firebase/firestore');
-// connectFirestoreEmulator(db, 'localhost', 8080);

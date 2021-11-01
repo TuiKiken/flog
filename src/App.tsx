@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,7 +7,7 @@ import {
   Redirect
 } from 'react-router-dom';
 import { Avatar, Layout, Menu, Typography } from 'antd';
-import { EditOutlined, GlobalOutlined, AreaChartOutlined, HeartOutlined } from '@ant-design/icons';
+import { EditOutlined, GlobalOutlined, AreaChartOutlined, HeartOutlined, LogoutOutlined } from '@ant-design/icons';
 
 import './App.css';
 
@@ -15,12 +15,15 @@ import 'services/firebase';
 import Auth from 'components/Auth';
 import AddFlog from 'pages/AddFlog';
 import { useSelector } from 'hooks/useSelector';
-import user from 'store/user';
+import { useDispatch } from 'hooks/useDispatch';
+import user, { signOutRequest } from 'store/user';
 
 const App: FC = () => {
+  const dispatch = useDispatch();
   const isAuthorized = useSelector(user.isAuthorized);
   const displayName = useSelector(user.getDisplayName);
   const photoURL = useSelector(user.getPhotoURL);
+  const handleSignOut = useCallback(() => dispatch(signOutRequest()), [dispatch]);
 
   return (
     <Router>
@@ -31,7 +34,9 @@ const App: FC = () => {
             <Menu.Item key="2" icon={<GlobalOutlined />}><Link to="/view">Просмотреть на карте</Link></Menu.Item>
             <Menu.Item key="3" icon={<AreaChartOutlined />}><Link to="/analytics">Аналитика</Link></Menu.Item>
             {isAuthorized && (
-              <Menu.Item key="4" icon={<Avatar src={photoURL} />} disabled style={{ marginLeft: 'auto' }}>{displayName}</Menu.Item>
+              <Menu.SubMenu key="4" icon={<Avatar src={photoURL} />} title={displayName} style={{ marginLeft: 'auto' }}>
+                <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleSignOut}>Выйти</Menu.Item>
+              </Menu.SubMenu>
             )}
           </Menu>
         </Layout.Header>

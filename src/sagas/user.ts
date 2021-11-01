@@ -1,10 +1,10 @@
+import { eventChannel } from 'redux-saga';
 import { all, call, fork, put, take, takeLatest } from 'redux-saga/effects';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 
 import { Saga } from 'types/saga';
+import { AUTH_PROVIDER } from 'constants/auth';
 import { SignInRequest, signInRequest, signInSuccess, signOutRequest, signOutSuccess } from 'store/user';
-import { AUTH_PROVIDER } from '../constants/auth';
-import { eventChannel } from 'redux-saga';
 
 const getProvider = (providerType: AUTH_PROVIDER) => {
   switch (providerType) {
@@ -22,7 +22,7 @@ enum AUTH_EVENT_TYPE {
 const getAuthEventsChannel = () => {
   const auth = getAuth();
 
-  return eventChannel((emitter) => {
+  return eventChannel((emitter) =>
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, displayName, photoURL } = user;
@@ -37,10 +37,8 @@ const getAuthEventsChannel = () => {
           type: AUTH_EVENT_TYPE.SIGN_OUT,
         });
       }
-    });
-
-    return () => {};
-  });
+    })
+  );
 };
 
 const authObserver: Saga = function* () {

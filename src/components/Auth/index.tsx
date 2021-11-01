@@ -1,9 +1,10 @@
 import React from 'react';
 import { Button, Modal } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
+
+import { AUTH_PROVIDER } from 'constants/auth';
 import { useDispatch } from 'hooks/useDispatch';
 import { useSelector } from 'hooks/useSelector';
-import { AUTH_PROVIDER } from 'constants/auth';
 import user, { signInRequest } from 'store/user';
 
 const Auth = () => {
