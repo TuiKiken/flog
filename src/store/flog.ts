@@ -1,6 +1,7 @@
-import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { FlogData } from 'types/flog';
+import { PrepareAction } from 'types/redux';
+import { FlogData, FlogFormData } from 'types/flog';
 
 type FlogItem = {
 
@@ -10,13 +11,34 @@ type FlogSliceState = {
   items?: FlogItem[];
 };
 
+type AddFlogRequestOrigin = {
+  data: FlogFormData;
+};
+
 export type AddFlogRequest = {
   data: FlogData;
 };
 
-const initialState: FlogSliceState = {};
+export const addFlogRequest = createAction<PrepareAction<AddFlogRequestOrigin, AddFlogRequest>>(
+  'flog/addRequest',
+  ({ data }) => ({
+    payload: {
+      data: {
+        ...data,
+        date: data.date?.toISOString() ?? null,
+        time: [
+          data.time?.[0]?.toISOString() ?? null,
+          data.time?.[1]?.toISOString() ?? null,
+        ],
+        water_temp: data.water_temp ? Number(data.water_temp) : null,
+        bigfish_weight: Number(data.bigfish_weight),
+        total_weight: Number(data.total_weight),
+      },
+    },
+  })
+);
 
-export const addFlogRequest = createAction<AddFlogRequest>('flog/addRequest');
+const initialState: FlogSliceState = {};
 
 const flogSlice = createSlice({
   name: 'flog',

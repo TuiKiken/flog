@@ -1,18 +1,20 @@
 import React, { FC, useEffect } from 'react';
-import { Button, DatePicker, Form, Input, message, Radio, Select, Space, TimePicker } from 'antd';
+import { Button, Form, Input, message, Radio, Select, Space } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 
-import { FlogData } from 'types/flog';
+import { FlogFormData } from 'types/flog';
 import { DEFAULT_POSITION, FISH_LIST } from 'constants/application';
 import { Map } from 'components/Map';
 import { WeatherChart } from 'components/WeatherChart';
+import DatePicker from 'components/DatePicker';
+import TimePicker from 'components/TimePicker';
 import getWeather from 'services/weather';
 import { usePosition } from 'hooks/usePosition';
 import './index.css';
 
 interface FlogFormProps {
-  data: FlogData;
-  onSubmit: (data: FlogData) => void;
+  data: FlogFormData;
+  onSubmit: (data: FlogFormData) => void;
 }
 
 const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
@@ -86,7 +88,7 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
             <DatePicker />
           </Form.Item>
           <Form.Item noStyle name="time">
-            <TimePicker.RangePicker format={'HH:mm'} minuteStep={10} />
+            <TimePicker format={'HH:mm'} minuteStep={10} />
           </Form.Item>
           <Button type="primary" icon={<ExportOutlined />} onClick={handleFillWeather}>Заполнить погоду</Button>
         </Space>
@@ -115,6 +117,7 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
 
       <Form.Item label="Температура воды" name="water_temp">
         <Input
+          type="number"
           addonAfter="°C"
           placeholder="Температура воды в день рыбалки"
         />
@@ -136,7 +139,7 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
         name="bigfish_weight"
         rules={[{ required: true, message: 'Укажите вес самой большой рыбы из улова' }]}
       >
-        <Input addonAfter="грамм" />
+        <Input type="number" addonAfter="грамм" />
       </Form.Item>
 
       <Form.Item
@@ -144,7 +147,7 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
         name="total_weight"
         rules={[{ required: true, message: 'Укажите общий вес улова' }]}
       >
-        <Input addonAfter="грамм" />
+        <Input type="number" addonAfter="грамм" />
       </Form.Item>
 
       {/*/!* @TODO: should be added in future release *!/*/}
