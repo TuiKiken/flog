@@ -6,11 +6,15 @@ service cloud.firestore {
         return request.auth != null;
       }
 
-      function isAuthor() {
-        return request.auth != null && request.auth.uid == resource.data.author_uid;
+      function isValidAuthorRequest() {
+        return isAuthorized() && request.auth.uid == request.resource.data.author_uid;
       }
 
-      allow create: if isAuthorized();
+      function isAuthor() {
+        return isAuthorized() && request.auth.uid == resource.data.author_uid;
+      }
+
+      allow create: if isValidAuthorRequest();
       allow read, write: if isAuthor();
     }
   }

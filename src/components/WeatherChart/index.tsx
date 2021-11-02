@@ -35,9 +35,11 @@ export const WeatherChart: React.FC<WeatherChartProps> = ({ weather, time }) => 
         />
         <YAxis hide={true} yAxisId="temperature-y" domain={['dataMin', 'dataMax']} unit={' °C'} />
         <YAxis hide={true} yAxisId="pressure-y" domain={['dataMin', 'dataMax']} unit={' hPa'} />
+        <YAxis hide={true} yAxisId="humidity-y" domain={['dataMin', 'dataMax']} unit={' hPa'} />
 
-        <Line yAxisId="temperature-y" type="monotone" name="Температура" dataKey="temperature" stroke="#8884d8" dot={{ r: 2 }} unit={' °C'} />
-        <Line yAxisId="pressure-y" type="monotone" name="Давление" dataKey="pressure" stroke="#F4BD3E" dot={{ r: 2 }} unit={' hPa'} />
+        <Line yAxisId="temperature-y" type="monotone" name="Температура" dataKey="temperature" stroke="#ff4d4f" dot={{ r: 1 }} unit={' °C'} />
+        <Line yAxisId="pressure-y" type="monotone" name="Давление" dataKey="pressure" stroke="#ffd666" dot={{ r: 1 }} unit={' hPa'} />
+        <Line yAxisId="humidity-y" type="monotone" name="Влажность" dataKey="humidity" stroke="#69c0ff" dot={{ r: 1 }} unit={' hPa'} />
 
         {newDayPoints.map(date => (
           <ReferenceLine key={date} yAxisId="temperature-y" x={`${date}`} stroke="#B0B0B0" strokeDasharray="5 10" />
