@@ -9,7 +9,7 @@ import App from './App';
 import Loader from './components/Loader';
 import * as serviceWorker from './serviceWorker';
 import { store, persistor } from 'store';
-import './emulator';
+// import './emulator';
 
 dayjs.locale('ru');
 

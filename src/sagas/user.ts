@@ -4,6 +4,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 
 import { Saga } from 'types/saga';
 import { AUTH_PROVIDER } from 'constants/auth';
+import { MESSAGE_TYPE, showMessageRequest } from 'store/message';
 import { SignInRequest, signInRequest, signInSuccess, signOutRequest, signOutSuccess } from 'store/user';
 
 const getProvider = (providerType: AUTH_PROVIDER) => {
@@ -65,10 +66,12 @@ const signInRequestHandler: Saga<SignInRequest> = function* ({ payload }) {
 
   try {
     yield call(signInWithPopup, auth, new AuthProvider());
-    // const result = yield call(signInWithPopup, auth, new AuthProvider());
-    // const credential = AuthProvider.credentialFromResult(result);
   } catch (error) {
-    console.warn('Auth error:', error);
+    yield put(showMessageRequest({
+      type: MESSAGE_TYPE.ERROR,
+      message: 'Ошибка авторизации',
+    }));
+    console.error('Auth error:', error);
   }
 }
 
@@ -76,7 +79,6 @@ const signOutRequestHandler: Saga = function* () {
   const auth = yield call(getAuth);
 
   yield call(signOut, auth);
-  yield put(signOutSuccess());
 }
 
 export default function* root() {

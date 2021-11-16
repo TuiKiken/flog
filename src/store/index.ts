@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
+import { Middleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 import {
   persistStore,
   persistReducer,
@@ -11,6 +12,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { createBrowserHistory } from 'history';
 import rootSage from 'sagas';
 import { reducer as userReducer  } from './user';
 import { reducer as flogReducer  } from './flog';
@@ -20,14 +22,16 @@ const persistConfig = {
   version: 1,
   storage,
   whitelist: [],
-}
+};
+
+export const history = createBrowserHistory();
 
 const reducers = persistReducer(persistConfig, combineReducers({
   user: userReducer,
   flog: flogReducer,
 }));
 
-const middlewares: SagaMiddleware[] = [];
+const middlewares: Middleware[] = [];
 
 const sagaMiddleware = createSagaMiddleware();
 middlewares.push(sagaMiddleware);

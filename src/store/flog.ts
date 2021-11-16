@@ -1,63 +1,84 @@
-import { createAction, createSlice } from '@reduxjs/toolkit';
+import { createAction, createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { FlogData, FlogGeneratedData, FlogId } from 'types/flog';
 import { RootState } from 'store';
-import { PrepareAction } from 'types/redux';
-import { FlogData, FlogFormData } from 'types/flog';
 
-type FlogItem = {
-
+export type AddFlogItemRequest = {
+  data: Omit<FlogData, FlogGeneratedData>;
 };
 
-type FlogSliceState = {
-  items?: FlogItem[];
+export type AddFlogItemSuccess = {
+  id: FlogId;
 };
 
-type AddFlogRequestOrigin = {
-  data: FlogFormData;
+export type UpdateFlogItemRequest = {
+  id: FlogId;
+  data: Omit<FlogData, FlogGeneratedData>;
 };
 
-export type AddFlogRequest = {
-  data: FlogData;
+export type UpdateFlogItemSuccess = {
+  id: FlogId;
 };
 
-export const addFlogRequest = createAction<PrepareAction<AddFlogRequestOrigin, AddFlogRequest>>(
-  'flog/addRequest',
-  ({ data }) => ({
-    payload: {
-      data: {
-        ...data,
-        date: data.date?.toISOString() ?? null,
-        time: [
-          data.time?.[0]?.toISOString() ?? null,
-          data.time?.[1]?.toISOString() ?? null,
-        ],
-        water_temp: data.water_temp ? Number(data.water_temp) : null,
-        bigfish_weight: Number(data.bigfish_weight),
-        total_weight: Number(data.total_weight),
-      },
-    },
-  })
-);
+export type GetFlogItemsRequest = undefined;
 
-const initialState: FlogSliceState = {};
+export type GetFlogItemsSuccess = {
+  items: FlogData[];
+};
+
+export type GetFlogItemRequest = {
+  id: FlogId;
+};
+
+export type GetFlogItemSuccess = {
+  item: FlogData;
+};
+
+export const addFlogItemRequest = createAction<AddFlogItemRequest>('flog/addFlogItemRequest');
+export const addFlogItemSuccess = createAction<AddFlogItemSuccess>('flog/addFlogItemSuccess');
+
+export const updateFlogItemRequest = createAction<UpdateFlogItemRequest>('flog/updateFlogItemRequest');
+export const updateFlogItemSuccess = createAction<UpdateFlogItemSuccess>('flog/updateFlogItemSuccess');
+
+export const getFlogItemsRequest = createAction<GetFlogItemsRequest>('flog/getFlogItemsRequest');
+export const getFlogItemRequest = createAction<GetFlogItemRequest>('flog/getFlogItemRequest');
+
+const flogAdapter = createEntityAdapter<FlogData>({
+  selectId: (item) => item.id,
+  // sortComparer: (a, b) => a.title.localeCompare(b.title),
+})
 
 const flogSlice = createSlice({
   name: 'flog',
-  initialState,
+  initialState: flogAdapter.getInitialState(),
   reducers: {
+    getFlogItemsSuccess: (state, action: PayloadAction<GetFlogItemsSuccess>) => {
+      const { payload } = action;
+      const { items } = payload;
 
+      flogAdapter.setAll(state, items);
+    },
+    getFlogItemSuccess: (state, action: PayloadAction<GetFlogItemSuccess>) => {
+      const { payload } = action;
+      const { item } = payload;
+
+      flogAdapter.addOne(state, item);
+    },
   }
 });
 
-const getFlog = (state: RootState) => state.flog;
-const getFlogItems = (state: RootState) => getFlog(state).items;
+const flogSelectors = flogAdapter.getSelectors<RootState>(state => state.flog);
+
+const getItems = flogSelectors.selectAll;
+const getItem = (state: RootState) => (id: FlogId) => getItems(state)?.find(i => i.id === id);
 
 const selectors = {
-  getFlog,
-  getFlogItems,
+  getItems,
+  getItem,
 };
 
 export const reducer = flogSlice.reducer;
 
-export const { } = flogSlice.actions;
+export const { getFlogItemsSuccess, getFlogItemSuccess } = flogSlice.actions;
 
 export default selectors;

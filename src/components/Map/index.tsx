@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import GoogleMapReact, { Coords } from 'google-map-react';
 import { AimOutlined, EnvironmentTwoTone } from '@ant-design/icons';
 
@@ -8,20 +8,28 @@ import { GOOGLE_MAP_API_KEY } from 'configs';
 
 interface MapProps {
   mapCenter: Coordinates;
-  userPosition: Coordinates | undefined;
-  onMapCenterChange: (mapCenter: Coordinates) => void;
+  userPosition?: Coordinates;
+  onMapCenterChange?: (mapCenter: Coordinates) => void;
 }
+
+const URL_KEYS = { key: GOOGLE_MAP_API_KEY };
 
 const UserLocation = (props: Coords) => (<EnvironmentTwoTone className="user-location" twoToneColor="#FF4333" />);
 
 export const Map: React.FC<MapProps> = ({ mapCenter, userPosition, onMapCenterChange }) => {
+  const handleDragEnd = useCallback(
+    (map: any) => onMapCenterChange?.({ latitude: map.center.lat(), longitude: map.center.lng() }),
+    [onMapCenterChange],
+    );
+  const center = useMemo(() => ({ lat: mapCenter.latitude, lng: mapCenter.longitude }), [mapCenter])
+
   return (
     <div className="map-container">
       <AimOutlined className="map-center" />
       <GoogleMapReact
-        onDragEnd={map => onMapCenterChange({ latitude: map.center.lat(), longitude: map.center.lng() })}
-        bootstrapURLKeys={{ key: GOOGLE_MAP_API_KEY }}
-        center={{ lat: mapCenter.latitude, lng: mapCenter.longitude }}
+        onDragEnd={handleDragEnd}
+        bootstrapURLKeys={URL_KEYS}
+        center={center}
         defaultZoom={14}>
         {userPosition && <UserLocation lat={userPosition.latitude} lng={userPosition.longitude} />}
       </GoogleMapReact>

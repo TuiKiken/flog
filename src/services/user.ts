@@ -1,7 +1,19 @@
 import { collection, doc, setDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, User } from 'firebase/auth';
 
 import { firebaseFirestore } from 'services/firebase';
+
+export const getAuthUser = () => new Promise<User | null>((resolve) => {
+  const user = getAuth().currentUser;
+
+  if (user === null) {
+    getAuth().onAuthStateChanged(resolve);
+  }
+
+  if (user !== null) {
+    resolve(user);
+  }
+});
 
 export const addUserItem = async () => {
   const user = getAuth().currentUser;

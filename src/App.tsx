@@ -1,66 +1,52 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Switch,
   Route,
-  Link,
-  Redirect
+  Redirect,
 } from 'react-router-dom';
-import { Avatar, Layout, Menu, Typography } from 'antd';
-import { EditOutlined, GlobalOutlined, AreaChartOutlined, HeartOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Layout, Typography } from 'antd';
+import { HeartOutlined } from '@ant-design/icons';
 
 import './App.css';
 
 import 'services/firebase';
 import Auth from 'components/Auth';
+import Menu from 'components/Menu';
 import AddFlog from 'pages/AddFlog';
-import { useSelector } from 'hooks/useSelector';
-import { useDispatch } from 'hooks/useDispatch';
-import user, { signOutRequest } from 'store/user';
+import ViewFlog from 'pages/ViewFlog';
+import ExploreFlog from 'pages/ExploreFlog';
+import Analytics from 'pages/Analytics';
 
-const App: FC = () => {
-  const dispatch = useDispatch();
-  const isAuthorized = useSelector(user.isAuthorized);
-  const displayName = useSelector(user.getDisplayName);
-  const photoURL = useSelector(user.getPhotoURL);
-  const handleSignOut = useCallback(() => dispatch(signOutRequest()), [dispatch]);
-
-  return (
-    <Router>
-      <Layout>
-        <Layout.Header>
-          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-            <Menu.Item key="1" icon={<EditOutlined />}><Link to="/add">Добавить</Link></Menu.Item>
-            <Menu.Item key="2" icon={<GlobalOutlined />}><Link to="/view">Просмотреть на карте</Link></Menu.Item>
-            <Menu.Item key="3" icon={<AreaChartOutlined />}><Link to="/analytics">Аналитика</Link></Menu.Item>
-            {isAuthorized && (
-              <Menu.SubMenu key="4" icon={<Avatar src={photoURL} />} title={displayName} style={{ marginLeft: 'auto' }}>
-                <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleSignOut}>Выйти</Menu.Item>
-              </Menu.SubMenu>
-            )}
-          </Menu>
-        </Layout.Header>
-        <Layout.Content style={{ background: '#fff', padding: '20px' }}>
-          <Switch>
-            <Route path="/add">
-              <AddFlog />
-            </Route>
-            <Route path="/view">
-              View page
-            </Route>
-            <Route path="/analytics">
-              Analytics page
-            </Route>
-            <Redirect from="/" to="/add" />
-          </Switch>
-        </Layout.Content>
-        <Layout.Footer style={{ textAlign: 'center' }}>
-          <Typography.Text type="secondary">With <HeartOutlined /> from Belarus</Typography.Text>
-        </Layout.Footer>
-      </Layout>
-      <Auth />
-    </Router>
-  );
-}
+const App: FC = () => (
+  <BrowserRouter>
+    <Layout>
+      <Layout.Header>
+        <Menu />
+      </Layout.Header>
+      <Layout.Content className="app-content">
+        <Switch>
+          <Route path="/add">
+            <AddFlog />
+          </Route>
+          <Route path="/explore/:id">
+            <ViewFlog />
+          </Route>
+          <Route path="/explore">
+            <ExploreFlog />
+          </Route>
+          <Route path="/analytics">
+            <Analytics />
+          </Route>
+          <Redirect from="/" to="/add" />
+        </Switch>
+      </Layout.Content>
+      <Layout.Footer className="app-footer">
+        <Typography.Text type="secondary">With <HeartOutlined /> from Belarus</Typography.Text>
+      </Layout.Footer>
+    </Layout>
+    <Auth />
+  </BrowserRouter>
+);
 
 export default App;

@@ -1,8 +1,10 @@
 import React, { FC, useEffect } from 'react';
-import { Button, Form, Input, message, Radio, Select, Space } from 'antd';
+import { Button, Form, Input, message, Radio, Select, Space, Checkbox } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
+import { geohashForLocation } from 'geofire-common';
+import dayjs from 'dayjs';
 
-import { FlogFormData } from 'types/flog';
+import { FlogData, FlogFormData, FlogGeneratedData } from 'types/flog';
 import { DEFAULT_POSITION, FISH_LIST } from 'constants/application';
 import { Map } from 'components/Map';
 import { WeatherChart } from 'components/WeatherChart';
@@ -13,9 +15,38 @@ import { usePosition } from 'hooks/usePosition';
 import './index.css';
 
 interface FlogFormProps {
-  data: FlogFormData;
-  onSubmit: (data: FlogFormData) => void;
+  data: Omit<FlogData, FlogGeneratedData>;
+  onSubmit: (data: Omit<FlogData, FlogGeneratedData>) => void;
 }
+
+export const convertToFormData = (data: Omit<FlogData, FlogGeneratedData>): FlogFormData => {
+  return {
+    ...data,
+    date: dayjs(data.date),
+    time: [dayjs(data.time[0]), dayjs(data.time[1])],
+    water_temp: data.water_temp !== null ? String(data.water_temp) : null,
+    bigfish_weight: data.bigfish_weight !== null ? String(data.bigfish_weight) : null,
+    total_weight: data.total_weight !== null ? String(data.total_weight) : null,
+  }
+};
+
+export const convertFromFormData = (data: FlogFormData): Omit<FlogData, FlogGeneratedData> => {
+  return {
+    ...data,
+    position: {
+      ...data.position,
+      geohash: geohashForLocation([data.position.latitude, data.position.longitude]),
+    },
+    date: data.date?.toISOString() ?? null,
+    time: [
+      data.time?.[0]?.toISOString() ?? null,
+      data.time?.[1]?.toISOString() ?? null,
+    ],
+    water_temp: data.water_temp ? Number(data.water_temp) : null,
+    bigfish_weight: Number(data.bigfish_weight),
+    total_weight: Number(data.total_weight),
+  };
+};
 
 const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
   const [form] = Form.useForm();
@@ -47,6 +78,9 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
     const weather = await getWeather(position.latitude, position.longitude, date.unix());
     form.setFieldsValue({ weather });
   };
+  const handleSubmit = (data: FlogFormData) => {
+    onSubmit(convertFromFormData(data));
+  };
 
   return (
     <Form
@@ -54,8 +88,8 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
       wrapperCol={{ span: 18 }}
       name="add_flog"
       form={form}
-      initialValues={data}
-      onFinish={onSubmit}
+      initialValues={convertToFormData(data)}
+      onFinish={handleSubmit}
     >
       <Form.Item label="Вид рыбалки" name="fishing_type">
         <Radio.Group>
@@ -172,6 +206,10 @@ const FlogForm: FC<FlogFormProps> = ({ data, onSubmit }) => {
 
       <Form.Item label="Коментарий" name="notes">
         <Input.TextArea />
+      </Form.Item>
+
+      <Form.Item label="Публичный отчёт" name="public" valuePropName="checked">
+        <Checkbox />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
